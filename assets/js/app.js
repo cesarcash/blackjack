@@ -1,6 +1,15 @@
 let deck = [];
 const letras = ['C','D','H','S'];
 const especiales = ['A','J','K','Q'];
+let btnPedir = document.querySelector('#btnPedir');
+let btnDetener = document.querySelector('#btnDetener');
+let btnNuevo = document.querySelector('#btnNuevo');
+
+let sumaHumano = 0, sumaMaquina = 0;
+// let small = document.body.children[2].firstElementChild.firstElementChild.firstElementChild;
+let small = document.querySelectorAll('small');
+let cartasJugador = document.querySelector("#jugador-cartas");
+let cartasMaquina = document.querySelector("#maquina-cartas");
 
 const crearDeck = () => {
 
@@ -24,9 +33,7 @@ const crearDeck = () => {
 
     // console.log(deck);
 
-    deck = _.shuffle(deck);
-
-    // console.log(deck);
+    deck = _.shuffle(deck);    
 
     return deck;
 
@@ -49,7 +56,7 @@ const pedirCarta = ()=>{
 
     const carta = deck.pop();
     // console.log(deck);
-    console.log(carta);
+    // console.log(carta);
     return carta;
     
 }
@@ -75,5 +82,91 @@ const valorCarta = (carta)=>{
 }
 
 const valor = valorCarta(pedirCarta());
-console.log({valor});
+// console.log({valor});
+const turnoMaquina = (puntosMinimo) =>{
 
+    do {
+
+        let carta = pedirCarta();
+        
+        sumaMaquina += valorCarta(carta);
+        small[1].textContent = sumaMaquina;
+    
+        // cartasJugador.innerHTML += `<img src="assets/cartas/${carta}.png" class="carta">`;
+        let nuevaCarta = document.createElement('img');
+        nuevaCarta.src = `assets/cartas/${carta}.png`;
+        nuevaCarta.classList.add('carta');
+        cartasMaquina.append(nuevaCarta);
+
+        if(puntosMinimo > 21){
+            break;
+        }
+
+    } while ( (sumaMaquina < puntosMinimo) && (puntosMinimo <= 21) );
+
+    setTimeout(() => {
+        
+        if(puntosMinimo == 21 || puntosMinimo < sumaMaquina){
+            alert("Ganaste!!!");
+        }else if(puntosMinimo > sumaMaquina){
+            alert("Perdiste!!!");
+        }else{
+            alert("¡Empates!");
+        }
+
+    },500);
+
+
+
+}
+
+btnPedir.addEventListener('click',(ev)=>{
+
+    // let carta = valorCarta(pedirCarta());
+    let carta = pedirCarta();
+    
+    sumaHumano += valorCarta(carta);
+    small[0].textContent = sumaHumano;
+
+    // cartasJugador.innerHTML += `<img src="assets/cartas/${carta}.png" class="carta">`;
+    let nuevaCarta = document.createElement('img');
+    nuevaCarta.src = `assets/cartas/${carta}.png`;
+    nuevaCarta.classList.add('carta');
+    cartasJugador.append(nuevaCarta);
+
+    if(sumaHumano > 21){
+        console.warn('Looser!!!');
+        btnPedir.disabled = true;
+        btnDetener.disabled = true;
+        turnoMaquina(sumaHumano);
+    }else if(sumaHumano === 21){
+        console.warn('Ganaste!!!');
+        // btnPedir.disabled = false;
+        btnPedir.setAttribute('disabled', true);
+        btnDetener.disabled = true;
+        turnoMaquina(sumaHumano);
+    }
+
+});
+
+btnDetener.addEventListener('click',function(){
+    this.disabled = true;
+    btnPedir.setAttribute('disabled',true);
+    turnoMaquina(sumaHumano);
+})
+
+btnNuevo.addEventListener('click',()=>{
+
+    deck = [];
+    deck = crearDeck();
+    
+    sumaHumano = 0;
+    sumaMaquina = 0;
+    cartasJugador.innerHTML = "";
+    cartasMaquina.innerHTML = "";
+    btnPedir.removeAttribute('disabled');
+    btnDetener.removeAttribute('disabled');
+    small[0].textContent = '0';
+    small[1].textContent = '0';
+    
+});
