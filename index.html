@@ -19,8 +19,8 @@
         <div class="row mt-2">
             <div class="col text-center">
                 <button id="btnNuevo" class="btn btn-danger">Nuevo juego</button>
-                <button id="btnPedir" class="btn btn-primary">Pedir carta</button>
-                <button id="btnDetener" class="btn btn-primary">Detener</button>
+                <button id="btnPedir" disabled class="btn btn-primary">Pedir carta</button>
+                <button id="btnDetener" disabled class="btn btn-primary">Detener</button>
             </div>
         </div>    
     </details>
@@ -29,7 +29,7 @@
             <h1>
                 Jugador 1 - <small>0</small>
             </h1>
-            <div id="jugador-cartas">
+            <div id="jugador-cartas" class="divCartas">
                 <!--<img src="assets/cartas/2c.png" class="carta">-->
             </div>
         </div>
@@ -39,12 +39,19 @@
     <div class="row container">
         <div class="col">
             <h1>Computadora - <small>0</small></h1>
-            <div id="maquina-cartas">
+            <div id="maquina-cartas" class="divCartas">
                 <!-- <img src="assets/cartas/3c.png" class="carta"> -->
             </div>
         </div>
     </div>
     <script src="assets/js/underscore.min.js"></script>
     <script src="assets/js/app.js"></script>
+    <script>
+        console.log( miApp );
+        
+        document.querySelector('#btnNuevo').addEventListener('click', () => {
+            miApp.nuevoJuego();
+        })
+    </script>
 </body>
 </html>
